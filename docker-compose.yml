@@ -1,0 +1,54 @@
+services:
+  web:
+    image: araujoleonardo/laravel11
+    container_name: web
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    working_dir: /var/www/ #dev
+    volumes:
+      - ./:/var/www #dev
+    ports:
+      - "80:80" #http
+      - "443:443" #https
+    networks:
+      - laravel11 #dev
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - laravel11
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: ${DB_HOST}
+      PMA_PORT: ${DB_PORT}
+      PMA_USER: ${DB_USERNAME}
+      PMA_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8080:80"
+    networks:
+      - laravel11
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    networks:
+      - laravel11
+
+networks:
+  laravel11:
+    driver: bridge
