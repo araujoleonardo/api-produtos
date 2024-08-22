@@ -1,20 +1,16 @@
 # Sobre
 
-Neste repositório vamos fazer a criação de uma imagem Docker que embora possa ser utilizada em produção, ainda merece ser aperfeiçoada para permitir realmente o escalonamento da aplicação.
+Aplicação para teste de vaga Desenvolvedor FullStack utilizando Docker, Php 8.2 e Laravel 11.x.
 
 # Conteúdo da Imagem Docker
 
-- <b>PHP</b>, e diversas extensões e Libs do PHP, incluindo php-redis, pgsql, mysql, entre outras.
+- <b>PHP</b>, e diversas extensões e Libs do PHP, incluindo mysql, entre outras.
 
-- <b>Nginx</b>, como proxy reverso/servidor. Por fim de testes é que o Nginx está presente nesta imagem, em um momento de otimização está imagem deixará de ter o Nginx.
+- <b>Nginx</b>, servidor web para servir a aplicação na porta 80.
 
-- <b>Supervisor</b>, indispensal para executarmos a aplicação PHP e permitir por exemplo a execução de filas e jobs.
+- <b>Mysql</b>, servidor de banco de dados.
 
-- <b>Composer</b>, afinal de contas é preciso baixar as dependências mais atuais toda vez que fomos crontruir uma imagem Docker.
-
-# Vídeos Tutorial
-
-[Vídeo Sobre Criação do Dockerfile e do Docker Compose file](https://youtu.be/iDJjb2zYa4c)
+- <b>Redis</b>, servidor de banco em tempo de execução.
 
 # Passo a Passo
 
@@ -29,20 +25,6 @@ docker ps
 ```sh
 docker compose version
 ```
-
-## Clone sua aplicação Laravel para a pasta 'app'. Caso a pasta app não existe, crie a pasta.
-
-A listagem de pastas do projeto deve ficar:
-
-```
-    app/
-    docker/
-    .gitignore
-    docker-compose.yml
-    readme.md
-```
-
-## Certifique-se que sua aplicação Laravel ficou em `./app` e que existe o seguinte caminho: `/app/public/index.php`
 
 ## Certifique-se que sua aplicação Laravel possuí um .env e que este .env está com a `APP_KEY=` definida com valor válido.
 
@@ -92,31 +74,4 @@ docker exec -it web bash
 cd /var/www && \
 chown -R www-data:www-data * && \
 chmod -R o+w .
-```
-
-# Build e Push Docker Hub
-
-```sh
-docker compose build
-```
-```
- docker composer up -d
-```
-```
- docker stats
-```
-```
-docker exec -it CONTAINER_ID bash
-```
-```
-docker compose push
-```
-```
-docker login
-```
-```
-docker logout
-```
-```
-docker run -p 80:80 -p 443:443 urnau/php82-app-2023:v1
 ```
