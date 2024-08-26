@@ -20,7 +20,7 @@ trait HasFile
             // Retornar a URL da imagem armazenada localmente
             //return Storage::disk('public')->url($this->image);
 
-            return Storage::url($this->image);
+            return asset('/' . $this->image);
         });
     }
 }

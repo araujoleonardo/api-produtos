@@ -11,7 +11,7 @@ class ProductFormRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,9 +23,10 @@ class ProductFormRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:50',
-            'description' => 'nullable|string|max:200',
+            'description' => 'required|string|max:200',
             'price' => 'required|min:0',
             'expiry_date' => 'required|date|after_or_equal:today',
+            'category_id' => 'required',
         ];
     }
 
@@ -34,11 +35,13 @@ class ProductFormRequest extends FormRequest
         return [
             'name.required' => 'O nome é obrigatório.',
             'name.max' => 'O nome não pode exceder 50 caracteres.',
+            'description.required' => 'A descrição é obrigatório.',
             'description.max' => 'A descrição não pode exceder 200 caracteres.',
             'price.required' => 'O preço é obrigatório.',
             'price.min' => 'O preço deve ser um valor positivo.',
             'expiry_date.required' => 'A data de validade é obrigatória.',
             'expiry_date.after_or_equal' => 'A data de validade não pode ser anterior à data atual.',
+            'category_id.required' => 'A categoria do produto é obrigatório.',
         ];
 
     }
