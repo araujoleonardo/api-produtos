@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductFormRequest;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $product = Product::orderBy('created_at');
+        $product = Product::with('category')->orderBy('created_at');
 
         if ($request->pesquisa) {
             $product->where('name', 'LIKE', "%{$request->pesquisa}%")
@@ -37,7 +38,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductFormRequest $request)
     {
         $request->validate([
             'image'         => 'required|image|mimes:jpg,png,jpeg|max:2048',
@@ -50,10 +51,12 @@ class ProductController extends Controller
             ]);
 
         try {
+            $priceString = preg_replace('/[^0-9,]/', '', $request->price);
+
             $product = new Product();
             $product->name          = $request->name;
             $product->description   = $request->description;
-            $product->price         = str_replace(['R$', ','], ['', '.'], $request->price);
+            $product->price         = str_replace(',', '.', $priceString);
             $product->expiry_date   = Carbon::parse($request->expiry_date)->format('Y-m-d');
             $product->category_id   = $request->category_id;
 
@@ -113,9 +116,11 @@ class ProductController extends Controller
         $product = Product::findOrFail($request->id);
 
         try {
+            $priceString = preg_replace('/[^0-9,]/', '', $request->price);
+
             $product->name          = $request->name;
             $product->description   = $request->description;
-            $product->price         = str_replace(['R$', ','], ['', '.'], $request->price);
+            $product->price         = str_replace(',', '.', $priceString);
             $product->expiry_date   = Carbon::parse($request->expiry_date)->format('Y-m-d');
             $product->category_id   = $request->category_id;
 
