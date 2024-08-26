@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip
 
-# Install PHP extensions
+# Instalar extenções do php
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_mysql zip iconv mbstring simplexml exif pcntl bcmath gd sockets fileinfo
 
@@ -34,12 +34,14 @@ RUN pecl install redis-${REDIS_LIB_VERSION} \
     && docker-php-ext-enable redis
 
 # Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+#RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY ./docker/supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 #COPY ./docker/supervisord/conf /etc/supervisord.d/
-### Supervisor permite monitorar e controlar vários processos (LINUX)
-### Bastante utilizado para manter processos em Daemon, ou seja, executando em segundo plano
+# Supervisor permite monitorar e controlar vários processos (LINUX)
+# Bastante utilizado para manter processos em Daemon, ou seja, executando em segundo plano
 
 COPY ./docker/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
 COPY ./docker/php/extra-php-fpm.conf /etc/php8/php-fpm.d/www.conf
@@ -58,6 +60,5 @@ COPY ./docker/nginx/sites.conf /etc/nginx/sites-enabled/default.conf
 COPY ./docker/nginx/error.html /var/www/html/error.html
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-# RUN apt update -y && apt install nano git -y
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

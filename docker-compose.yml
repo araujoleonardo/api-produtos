@@ -1,10 +1,11 @@
 services:
   web:
-    image: araujoleonardo/laravel11
-    container_name: web
     build:
       context: ./
       dockerfile: ./docker/Dockerfile
+    image: araujoleonardo/laravel11
+    container_name: web
+    restart: always #dev
     working_dir: /var/www/ #dev
     volumes:
       - ./:/var/www #dev
