@@ -12,6 +12,11 @@ Aplicação para teste de vaga Desenvolvedor FullStack utilizando Docker, Php 8.
 
 - <b>Redis</b>, servidor de banco em tempo de execução.
 
+# Pacotes usados
+
+- Sanctum: Para autenticação.
+
+
 # Passo a Passo
 
 ## Certifique-se de estar com o Docker em execução.
@@ -62,6 +67,24 @@ docker compose down
 
 ```sh
 docker exec -it web bash
+```
+
+## Para gerar a key no .env:
+
+```sh
+php artisan key:generate
+```
+
+## Para rodar migrations:
+
+```sh
+php artisan migrate
+```
+
+## Para rodar seeds:
+
+```sh
+php artisan db:seed
 ```
 
 # Solução de Problemas
